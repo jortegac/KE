@@ -13,12 +13,34 @@ $( document ).ready(function() {
 	// Where the spinner animation will be placed 
 	target = document.getElementById('modal');
 	
-	initDisciplines();
-	initDatePicker();
+	initForm();
 	
-	getDisciplines();
+	
+	
+	
 
 });
+
+function initForm() {
+
+	$("#searchForm").submit(function( event ) {
+		// Prevent default behaviour from the search button
+		event.preventDefault();		
+		submitForm();
+	});
+
+	initDisciplines();
+	initDatePicker();	
+	getDisciplines();
+}
+
+function submitForm() {
+	// Get selected disciplines
+	var disciplines = $("#disciplinesDropDown").dropdownCheckbox("checked");
+	
+	// Get event date
+	var date = $("#date-event").val();
+}
 
 function initDisciplines() {
 	$("#disciplinesDropDown").dropdownCheckbox({

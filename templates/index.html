@@ -47,6 +47,9 @@
 </head>
 
 <body>
+
+	<div id="modal">  </div>
+
 	<div class="container-fluid">	
 		<div class="row" id="header">
 			<div class="col-md-12"> 
@@ -76,10 +79,51 @@
 						<input type="text" class="form-control" value="" placeholder="Event date (click to select)" id="date-event" readonly>
 					</div>
 				</div>
-				<div class="row"></br></br></div>
+				<div class="row"></br></div>
+				
 				<div class="row">
-					<div class="col-md-4"> <button id="search-venue" type="submit" class="btn btn-info" >Submit</button></div>
+					<div class="col-md-6">
+						<fieldset>
+							<legend>Preferred supplier skill rating</legend>
+							<input type="radio" name="skill" value="High"/>  High <br/>
+							<input type="radio" name="skill" value="Low"/> Low <br/>
+							<input type="radio" name="skill" value="Indifferent" checked/> Indifferent
+						</fieldset>
+					</div>
 				</div>
+				
+				<div class="row"></br></div>
+				
+				<div class="row">
+					<div class="col-md-6">
+						<fieldset>
+							<legend>Preferred supplier quality rating</legend>
+							<input type="radio" name="quality" value="High"/> High <br/>
+							<input type="radio" name="quality" value="Low"/> Low <br/>
+							<input type="radio" name="quality" value="Indifferent" checked/> Indifferent
+						</fieldset>
+					</div>
+				</div>
+				
+				<div class="row"></br></div>
+				
+				<div class="row">
+					<div class="col-md-6"> 
+						<fieldset>
+							<legend>Preferred supplier price rating</legend>
+							<input type="radio" name="price" value="High"/> High <br/>
+							<input type="radio" name="price" value="Low"/> Low <br/>
+							<input type="radio" name="price" value="Indifferent" checked/> Indifferent
+						</fieldset>
+					</div>
+				</div>
+				
+				<div class="row"></br></div>
+				
+				<div class="row">
+					<div class="col-md-4"> <button id="submitBtn" type="submit" class="btn btn-info" >Submit</button></div>
+				</div>
+				
 				
 			</form>
 		</div>		
