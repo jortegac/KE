@@ -1,0 +1,121 @@
+#header {
+	padding: 7px;
+	text-align: center;
+	background-color:#CCCCCC;
+}
+
+.form-inline {
+	margin: auto;
+}
+
+.dropMultiSelect {
+	display: inline;
+}
+
+.layout {
+	text-align: justify;
+}
+
+#geoCheck{
+	display: none;
+	color: grey;
+}
+
+.panel {
+	position: absolute;
+	top: 64px;
+	left: 0;
+	display: none;
+	background: #025167;
+	border:1px solid #025167;
+	-moz-border-radius-topright: 20px;
+	-webkit-border-top-right-radius: 20px;
+	-moz-border-radius-bottomright: 20px;
+	-webkit-border-bottom-right-radius: 20px;
+	width: 330px;
+	height: 90%;
+	padding: 10px;
+	filter: alpha(opacity=85);
+	opacity: .85;
+	z-index: 10;
+	color: #FFFFFF;
+	margin-bottom:-64px;
+}
+
+#showStats_div{
+	position: absolute;
+    top: 100px;
+    right: 30px;
+	display: none;
+	color: black;
+}
+
+.stats_panel {
+	position: absolute;
+    top: 128px;
+    right: 0;
+	background: #f0f0ff;
+	border:1px solid #025167;
+	-moz-border-radius-topright: 20px;
+	-webkit-border-top-right-radius: 20px;
+	-moz-border-radius-bottomright: 20px;
+	-webkit-border-bottom-right-radius: 20px;
+	filter: alpha(opacity=85);
+	opacity: .70;
+	z-index: 10;
+    color: black;
+}
+
+#panelText{
+	font-size: 13px;
+	margin-top: 15px;
+	height: 60%;
+	overflow-y: auto;
+}
+
+#closebutton{
+	font-size: 9px;
+	cursor: pointer;
+	position: absolute;
+	padding-bottom: 5px;
+	right: 15px;
+	background-image:url('http://www.iconattitude.com/icons/open_icon_library/actions/png/256/window-close.png');
+	
+}
+
+.spinner{
+	position:fixed;
+	z-index: 100;  
+	top:50%;  
+	left:50%;  
+}
+
+#map-canvas{
+	margin-bottom:-64px;
+}
+
+#info_window{
+  min-width: 400px;
+  width: 400px;
+}
+
+.gm-style .gm-style-iw{
+  min-width: 400px;
+  width: 600px;
+  min-height: 300px;
+  max-height: 300px;
+  /*padding: 0px 10px 5px 5px;*/
+  overflow-y: scroll;
+  overflow-x: visible;
+}
+
+.gm-style .gm-style-iw div {
+  overflow-y: scroll;
+  overflow-x: visible;
+}
+
+.gm-style-iw div {
+  overflow:visible !important;
+}
+
+
