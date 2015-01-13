@@ -1,1 +1,3 @@
 # KE
+
+Requires Flask, SQLAlchemy
