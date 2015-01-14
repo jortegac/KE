@@ -37,7 +37,17 @@ def disciplines():
 # Main function that will create the groups of suppliers that can cover the needs expresses in the parameters
 @app.route('/findSuppliers', methods=['GET'])
 def findSuppliers():
-    return ""
+	disciplines = request.args.getList('ds', None)
+	if 'date' in request.args:
+		date = request.args.get('date')
+	location = request.args.get('location')
+	budget = request.args.get('budget')
+	visitors = request.args.get('visitors')
+	skill = request.args.get('skill')
+	quality = request.args.get('quality')
+	price = request.args.get('price')
+	
+	return ""
 		    
 if __name__ == '__main__':    
     app.run(debug=True)
