@@ -4,6 +4,15 @@
 	background-color:#CCCCCC;
 }
 
+legend {
+	font-size:16px;
+	margin-bottom: 5px;
+	color: #999999;
+	text-align: center;
+	
+	
+}
+
 .form-inline {
 	margin: auto;
 }
