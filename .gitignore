@@ -53,9 +53,5 @@ docs/_build/
 # PyBuilder
 target/
 
-# Excel files
-*.xs
-
-# Confidential
-extra/db_initial.py
-*/db_initial*.*
+# Database
+*.db
