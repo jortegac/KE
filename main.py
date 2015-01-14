@@ -3,7 +3,7 @@ import sys
 sys.path.insert(0, './extra')
 from flask import Flask, render_template, url_for, request, jsonify, Response, json
 from StringIO import StringIO
-from db_declare import Supplier, Base, Discipline
+from db_declare import Supplier, Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import requests
@@ -42,8 +42,8 @@ def sparql():
 # Get a distinct list of all the available disciplines
 @app.route('/disciplines', methods=['GET'])
 def disciplines():
-    cols = ['name']
-    query = session.query(Discipline.name).distinct()
+    cols = ['discipline']
+    query = session.query(Supplier.discipline).distinct()
     disciplines = [{col: getattr(d, col) for col in cols} for d in query]    
     return jsonify(disciplines=disciplines)
 		    

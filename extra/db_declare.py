@@ -13,22 +13,16 @@ class Supplier(Base):
 	
 	id = Column(Integer, primary_key=True)
 	name = Column(String(250), nullable=False)
-	contact = Column(String(250), nullable=False)
+	contact = Column(String(250))
 	phone = Column(String(250))
 	email = Column(String(250))
-	discipline = relationship('Discipline', backref='Supplier', lazy='dynamic')
-	location = Column(String(250), nullable=False)
-	skills_rating = Column(Integer)
+	url = Column(String(250))
+	discipline = Column(String(250), nullable=False)
+	times_hired = Column(Integer)
+	location = Column(String(250))
+	experience_rating = Column(Integer)
 	quality_rating = Column(Integer)
 	price_rating = Column(Integer)
-	
-class Discipline(Base):
-	__tablename__ = 'Discipline'
-	id = Column(Integer, primary_key=True)
-	name = Column(String(250), nullable=False)
-	supplier_id = Column(Integer, ForeignKey('Supplier.id'))
-	
-	
 
 # Create an engine that stores data in the local directory's ke.db file.
 engine = create_engine('sqlite:///ke.db')

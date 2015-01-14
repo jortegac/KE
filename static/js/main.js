@@ -79,7 +79,7 @@ function getDisciplines(){
 	$.getJSON(service).done(function(json) {
 		
 		$.each(json.disciplines, function(i, discipline) {			
-			var name = discipline.name;			
+			var name = discipline.discipline;			
 			var item = {id: name, label: name}			
 			genres.push(item)			
 		});	
