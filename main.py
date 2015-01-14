@@ -19,26 +19,13 @@ DBSession = sessionmaker()
 DBSession.bind = engine
 session = DBSession()
 
-
-
 app = Flask(__name__)
 app.logger.addHandler(logging.FileHandler("app.log"))
 			
 @app.route('/')
 def index():
     return render_template('index.html')
-    
-# REST Endpoint wrapper for the runQuery function
-@app.route('/sparql', methods=['GET'])
-def sparql():
-    # app.logger.debug('You arrived at ' + url_for('sparql'))
-    # app.logger.debug('I received the following arguments' + str(request.args) )
-	
-    query = request.args.get('query', None)    
-    return_format = request.args.get('format','JSON')
-    
-    return runQuery(query, return_format)
-	
+    	
 # Get a distinct list of all the available disciplines
 @app.route('/disciplines', methods=['GET'])
 def disciplines():
@@ -46,6 +33,11 @@ def disciplines():
     query = session.query(Supplier.discipline).distinct()
     disciplines = [{col: getattr(d, col) for col in cols} for d in query]    
     return jsonify(disciplines=disciplines)
+
+# Main function that will create the groups of suppliers that can cover the needs expresses in the parameters
+@app.route('/findSuppliers', methods=['GET'])
+def findSuppliers():
+    return ""
 		    
 if __name__ == '__main__':    
     app.run(debug=True)
