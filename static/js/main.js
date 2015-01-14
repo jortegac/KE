@@ -49,10 +49,8 @@ function submitForm() {
 		flag = false;
 	}
 	
-	// Get event date
-	var date = $("#date-event").val();
-	
 	// Build date query string
+	var date = $("#date-event").val();	
 	var dateQueryString = "";
 	if (date != "") {
 		dateQueryString = "&date=" + date;
