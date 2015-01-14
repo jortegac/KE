@@ -108,8 +108,38 @@ function submitForm() {
 		
 		// Build full query string
 		var endpoint = "/findSuppliers?" + disciplinesQueryString + dateQueryString + locationQueryString + budgetQueryString + visitorsQueryString + skillQueryString + qualityQueryString + priceQueryString;
+		
+		executeQuery(endpoint);
 	}
 	
+}
+
+function executeQuery(endpoint){
+
+	startLoadingAnimation();
+	
+	console.log(endpoint);
+	
+	$.getJSON(endpoint).done(function(json) {
+		console.log(json);
+		var groups = json.groups;
+		
+		if (groups.length != 0){
+			for( group in groups ){
+				suppliers = groups[group];
+				for( i=0; i < suppliers.length; i++){
+					// Do something here with the data
+					console.log(suppliers[i].name);
+				}			
+			}
+		
+		} else {
+			// No info to display
+			BootstrapDialog.alert({title:"Information", message:"No results found. Try a different combination"});
+		}
+		
+		stopLoadingAnimation();
+	});
 }
 
 function initDisciplines() {
@@ -144,9 +174,9 @@ function initDatePicker(){
 // Retrieves a list of genres from the RDF store
 function getDisciplines(){
 	var genres = [];
-	var service = '/disciplines';
+	var endpoint = '/disciplines';
 
-	$.getJSON(service).done(function(json) {
+	$.getJSON(endpoint).done(function(json) {
 		
 		$.each(json.disciplines, function(i, discipline) {			
 			var name = discipline.discipline;			

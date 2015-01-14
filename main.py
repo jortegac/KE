@@ -1,17 +1,21 @@
 import os
 import sys
 sys.path.insert(0, './extra')
+sys.path.insert(0, './evol')
 from flask import Flask, render_template, url_for, request, jsonify, Response, json
 from StringIO import StringIO
 from db_declare import Supplier, Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from individual import Individual
+from evaluator import Evaluator
 import requests
 import sqlite3
 import json
 import urllib2 as urllib
 import logging
 import oauth2 as oauth
+import random
 
 engine = create_engine('sqlite:///extra/ke.db')
 Base.metadata.bind = engine
@@ -37,7 +41,7 @@ def disciplines():
 # Main function that will create the groups of suppliers that can cover the needs expresses in the parameters
 @app.route('/findSuppliers', methods=['GET'])
 def findSuppliers():
-	disciplines = request.args.getList('ds', None)
+	disciplines = request.args.getlist('ds')
 	if 'date' in request.args:
 		date = request.args.get('date')
 	location = request.args.get('location')
@@ -47,7 +51,62 @@ def findSuppliers():
 	quality = request.args.get('quality')
 	price = request.args.get('price')
 	
-	return ""
-		    
+	groups_tmp = calculateGroups(disciplines, location, budget, visitors, skill, quality, price)
+	
+	tmp = {}
+	counter = 0
+	for group in groups_tmp:
+		tmp.setdefault(counter, [])
+		for supplier in group.suppliers:
+			tmp[counter].append(supplier)
+		counter += 1
+	result = {}
+	for x in tmp:
+		result.setdefault(x, [])
+		for supplier in tmp[x]:
+			sup = {}
+			sup.setdefault('name', supplier.name)
+			sup.setdefault('contact', supplier.contact)
+			sup.setdefault('email', supplier.email)
+			sup.setdefault('url', supplier.url)
+			sup.setdefault('discipline', supplier.discipline)
+			sup.setdefault('times_hired', supplier.times_hired)
+			sup.setdefault('location', supplier.location)
+			sup.setdefault('experience_rating', supplier.experience_rating)
+			sup.setdefault('quality_rating', supplier.quality_rating)
+			sup.setdefault('price_rating', supplier.price_rating)
+			result[x].append(sup)
+	
+	groups = result
+	
+	return jsonify(groups=groups)
+	
+def calculateGroups(disciplines, location, budget, visitors, skill, quality, price):
+	
+	# Get a list of all suppliers
+	all_suppliers = session.query(Supplier).filter(Supplier.discipline.in_(disciplines)).all()
+	
+	# Group suppliers per discipline
+	dict_suppliers = {}
+	for discipline in disciplines:
+		dict_suppliers.setdefault(discipline, [])
+	for supplier in all_suppliers:
+		dict_suppliers[supplier.discipline].append(supplier)
+	
+	population = []
+	evaluator = Evaluator(10000)
+	for x in range(100):
+		candidate_suppliers = []
+		for sup_per_discipline in dict_suppliers:
+			candidate_suppliers.append(selectRandomSupplier(dict_suppliers, sup_per_discipline))
+		individual = Individual(candidate_suppliers)
+		population.append(individual)
+		
+	return population[:3]
+	
+def selectRandomSupplier(suppliers, sup_discipline):
+	rand = random.randint(0, len(suppliers[sup_discipline])-1)
+	return (suppliers[sup_discipline][rand])
+		
 if __name__ == '__main__':    
     app.run(debug=True)
