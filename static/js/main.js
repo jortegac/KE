@@ -123,15 +123,80 @@ function executeQuery(endpoint){
 	$.getJSON(endpoint).done(function(json) {
 		console.log(json);
 		var groups = json.groups;
-		
+		var text = [];
 		if (groups.length != 0){
+			
+			
 			for( group in groups ){
+				var tmp = "";
 				suppliers = groups[group];
 				for( i=0; i < suppliers.length; i++){
 					// Do something here with the data
 					console.log(suppliers[i].name);
-				}			
+					tmp = tmp + "<p><strong>" + suppliers[i].name + "</strong></br>";
+					tmp = tmp + "<i>" + suppliers[i].discipline + "</i></br><small>";
+					
+					if(suppliers[i].contact != null) {
+						tmp = tmp + "Contact: " + suppliers[i].contact + "</br>";
+					}
+					
+					if(suppliers[i].phone != null){
+						tmp = tmp + "Phone: " + suppliers[i].phone + "</br>";
+					}
+					
+					if(suppliers[i].email != null){
+						tmp = tmp + "Email: " + suppliers[i].email + "</br>";
+					}
+					
+					if(suppliers[i].times_hired != null){
+						tmp = tmp + "Times hired:" + suppliers[i].times_hired + "</br>";
+					}
+					
+					if(suppliers[i].location != null){
+						tmp = tmp + "Location: " + suppliers[i].location + "</br>";
+					}
+					
+					if(suppliers[i].experience_rating != null){
+						tmp = tmp + "Experience Rating: " + suppliers[i].experience_rating + "</br>";
+					}
+					
+					if(suppliers[i].quality_rating != null){
+						tmp = tmp + "Quality Rating: " + suppliers[i].quality_rating + "</br>";
+					}
+					
+					if(suppliers[i].price_rating != null){
+						tmp = tmp + "Price Rating: " + suppliers[i].price_rating;
+					}
+					
+					tmp = tmp + "</small></p><hr>";
+								
+				}		
+				text.push(tmp);
 			}
+			
+			
+			
+			BootstrapDialog.show({
+            title: 'Possible groupings',
+            message: text[0],
+			size: BootstrapDialog.SIZE_WIDE,
+            buttons: [{
+                label: 'Option 1',
+                action: function(dialog) {
+                    dialog.setMessage(text[0]);
+                }
+            }, {
+                label: 'Option 2',
+                action: function(dialog) {
+                    dialog.setMessage(text[1]);
+                }
+            }, {
+                label: 'Option 3',
+                action: function(dialog) {
+                    dialog.setMessage(text[2]);
+                }
+            }]
+        });
 		
 		} else {
 			// No info to display
