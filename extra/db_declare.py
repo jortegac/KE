@@ -17,6 +17,7 @@ class Supplier(Base):
 	phone = Column(String(250))
 	email = Column(String(250))
 	url = Column(String(250))
+	unit_measure = Column(Integer)
 	discipline = Column(String(250), nullable=False)
 	times_hired = Column(Integer)
 	location = Column(String(250))
