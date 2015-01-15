@@ -51,6 +51,12 @@ def findSuppliers():
 	quality = request.args.get('quality')
 	price = request.args.get('price')
 	
+	supplier_locations = session.query(Supplier.location).filter(Supplier.discipline.in_(disciplines)).filter(Supplier.location <> None).all()	
+	distances = {}	
+	for loc in supplier_locations:
+		distances.setdefault(loc[0], calculateDistance(location, loc[0]))	
+		
+		
 	groups_tmp = calculateGroups(disciplines, location, budget, visitors, skill, quality, price)
 	
 	tmp = {}
@@ -104,6 +110,10 @@ def calculateGroups(disciplines, location, budget, visitors, skill, quality, pri
 		
 	return population[:3]
 	
+def calculateDistance(origin, destination):
+	data = requests.get('https://maps.googleapis.com/maps/api/directions/json?origin=' + origin + '&destination=' + destination).json()
+	return data['routes'][0]['legs'][0]['distance']['value']
+
 def selectRandomSupplier(suppliers, sup_discipline):
 	rand = random.randint(0, len(suppliers[sup_discipline])-1)
 	return (suppliers[sup_discipline][rand])
