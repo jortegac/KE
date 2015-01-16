@@ -57,7 +57,7 @@ def findSuppliers():
 		distances.setdefault(loc[0], calculateDistance(location, loc[0]))	
 		
 		
-	groups_tmp = calculateGroups(disciplines, location, budget, visitors, skill, quality, price)
+	groups_tmp = calculateGroups(disciplines, location, budget, visitors, skill, quality, price, distances)
 	
 	tmp = {}
 	counter = 0
@@ -87,7 +87,9 @@ def findSuppliers():
 	
 	return jsonify(groups=groups)
 	
-def calculateGroups(disciplines, location, budget, visitors, skill, quality, price):
+def calculateGroups(disciplines, location, budget, visitors, skill, quality, price, distances):
+	
+	pref = {'High' : 2, 'Low' : 1, 'Indifferent' : 0}
 	
 	# Get a list of all suppliers
 	all_suppliers = session.query(Supplier).filter(Supplier.discipline.in_(disciplines)).all()
@@ -99,14 +101,31 @@ def calculateGroups(disciplines, location, budget, visitors, skill, quality, pri
 	for supplier in all_suppliers:
 		dict_suppliers[supplier.discipline].append(supplier)
 	
+	prefHighQualityRating = pref[quality]
+	prefHighSkillRating = pref[skill]
+	prefHighPriceRating = pref[price]
+	
 	population = []
-	evaluator = Evaluator(10000)
+	evaluator = Evaluator(10000, visitors, distances, prefHighQualityRating, prefHighSkillRating, prefHighPriceRating)
+	
 	for x in range(100):
 		candidate_suppliers = []
 		for sup_per_discipline in dict_suppliers:
 			candidate_suppliers.append(selectRandomSupplier(dict_suppliers, sup_per_discipline))
 		individual = Individual(candidate_suppliers)
+		
+		# get score for individual
+		#score = evaluator.eval(individual)
+		
+		# assign score
+		#individual.score = score		
+		
+		# add individual to population
 		population.append(individual)
+	
+	# Sort individuals by fitness
+	population.sort(key=lambda x: x.score, reverse=True)
+	
 		
 	return population[:3]
 	
