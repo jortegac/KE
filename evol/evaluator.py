@@ -2,13 +2,12 @@ class Evaluator:
 
 	def evaluation(self, individual):
 		score = 0
-		counter = 0
 		
 		for supplier in individual.suppliers:
 			score += self.function(supplier);
 		
-		counter += 1		
-		if counter == self.max_evals:
+		self.counter += 1		
+		if self.counter == self.max_evals:
 			return None
 
 		return score

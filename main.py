@@ -9,6 +9,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from individual import Individual
 from evaluator import Evaluator
+from crossover import Crossover
 import requests
 import sqlite3
 import json
@@ -113,9 +114,11 @@ def calculateGroups(disciplines, location, budget, visitors, skill, quality, pri
 	prefHighPriceRating = pref[price]
 	
 	population = []
-	evaluator = Evaluator(10000, visitors, distances, prefHighQualityRating, prefHighSkillRating, prefHighPriceRating)
+	evaluator = Evaluator(100000, visitors, distances, prefHighQualityRating, prefHighSkillRating, prefHighPriceRating)
 	
-	for x in range(9999):
+	crossover = Crossover()
+	
+	for x in range(100):
 		candidate_suppliers = []
 		for sup_per_discipline in dict_suppliers:
 			candidate_suppliers.append(selectRandomSupplier(dict_suppliers, sup_per_discipline))
@@ -129,6 +132,37 @@ def calculateGroups(disciplines, location, budget, visitors, skill, quality, pri
 		
 		# add individual to population
 		population.append(individual)
+	
+	# Sort individuals by fitness
+	population.sort(key=lambda x: x.score, reverse=True)
+	
+	flag = True
+	
+	while flag:
+		
+		
+		new_pop = []
+		
+		for x in range(10):
+			ind1 = population[x]
+			ind2 = population[random.randint(0, len(population)-1)]
+			
+			new_ind = crossover.crossover(ind1, ind2)
+			new_pop.append(new_ind)
+		
+		for ind in new_pop:
+			score = evaluator.evaluation(ind)
+			
+			if score <> None:
+				ind.score = score
+			else:
+				flag = False
+				break;
+				
+			population.append(ind)
+		
+		population.sort(key=lambda x: x.score, reverse=True)
+		population = population[:100]
 	
 	# Sort individuals by fitness
 	population.sort(key=lambda x: x.score, reverse=True)
