@@ -46,16 +46,23 @@ def findSuppliers():
 		date = request.args.get('date')
 	location = request.args.get('location')
 	budget = request.args.get('budget')
-	visitors = request.args.get('visitors')
+	visitors = int(request.args.get('visitors'))
 	skill = request.args.get('skill')
 	quality = request.args.get('quality')
 	price = request.args.get('price')
 	
-	supplier_locations = session.query(Supplier.location).filter(Supplier.discipline.in_(disciplines)).filter(Supplier.location <> None).all()	
+	supplier_locations = session.query(Supplier.location).filter(Supplier.discipline.in_(disciplines)).filter(Supplier.location <> None).distinct()	
+	
+	app.logger.info(list(supplier_locations))
+	
 	distances = {}	
 	for loc in supplier_locations:
-		distances.setdefault(loc[0], calculateDistance(location, loc[0]))	
-		
+		try:
+			distances.setdefault(loc[0], calculateDistance(location, loc[0]))	
+		except IndexError as error:
+			app.logger.error(error)
+			app.logger.error('Failed to get distance for: ' + location)
+			distances.setdefault(loc[0], -1)
 		
 	groups_tmp = calculateGroups(disciplines, location, budget, visitors, skill, quality, price, distances)
 	
@@ -108,17 +115,17 @@ def calculateGroups(disciplines, location, budget, visitors, skill, quality, pri
 	population = []
 	evaluator = Evaluator(10000, visitors, distances, prefHighQualityRating, prefHighSkillRating, prefHighPriceRating)
 	
-	for x in range(100):
+	for x in range(9999):
 		candidate_suppliers = []
 		for sup_per_discipline in dict_suppliers:
 			candidate_suppliers.append(selectRandomSupplier(dict_suppliers, sup_per_discipline))
 		individual = Individual(candidate_suppliers)
 		
 		# get score for individual
-		#score = evaluator.eval(individual)
+		score = evaluator.evaluation(individual)
 		
 		# assign score
-		#individual.score = score		
+		individual.score = score		
 		
 		# add individual to population
 		population.append(individual)
@@ -126,6 +133,11 @@ def calculateGroups(disciplines, location, budget, visitors, skill, quality, pri
 	# Sort individuals by fitness
 	population.sort(key=lambda x: x.score, reverse=True)
 	
+	app.logger.debug(population[0].score)
+	app.logger.debug(population[1].score)
+	app.logger.debug(population[2].score)
+	app.logger.debug(population[3].score)
+	app.logger.debug(population[4].score)
 		
 	return population[:3]
 	
