@@ -114,7 +114,7 @@ def calculateGroups(disciplines, location, budget, visitors, skill, quality, pri
 	prefHighPriceRating = pref[price]
 	
 	population = []
-	evaluator = Evaluator(100000, visitors, distances, prefHighQualityRating, prefHighSkillRating, prefHighPriceRating)
+	evaluator = Evaluator(25000, visitors, distances, prefHighQualityRating, prefHighSkillRating, prefHighPriceRating)
 	
 	crossover = Crossover()
 	
