@@ -117,6 +117,7 @@ def calculateGroups(disciplines, location, budget, visitors, skill, quality, pri
 	
 	crossover = Crossover()
 	
+	# Initial population
 	for x in range(100):
 		candidate_suppliers = []
 		for sup_per_discipline in dict_suppliers:
@@ -135,16 +136,17 @@ def calculateGroups(disciplines, location, budget, visitors, skill, quality, pri
 	# Sort individuals by fitness
 	population.sort(key=lambda x: x.score, reverse=True)
 	
-	flag = True
-	
+	# Evolve
+	flag = True	
 	while flag:		
 		
 		# Children
 		new_pop = []
 		
-		# Crossover the top 10 with 10 random others to make 10 children
+		# Crossover 20 random individuals to make 10 children
 		for x in range(10):
-			ind1 = population[x]
+			#ind1 = population[x]
+			ind1 = population[random.randint(0, len(population)-1)]
 			ind2 = population[random.randint(0, len(population)-1)]
 			
 			new_ind = crossover.crossover(ind1, ind2)
@@ -180,11 +182,10 @@ def calculateGroups(disciplines, location, budget, visitors, skill, quality, pri
 	# Sort individuals by fitness
 	population.sort(key=lambda x: x.score, reverse=True)
 	
-	
 	for x in range(10):
 		app.logger.debug(population[x].score)
 	
-		
+	# Return top 3
 	return population[:3]
 
 
