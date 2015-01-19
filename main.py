@@ -17,6 +17,7 @@ import urllib2 as urllib
 import logging
 import oauth2 as oauth
 import random
+from time import sleep
 
 engine = create_engine('sqlite:///extra/ke.db')
 Base.metadata.bind = engine
@@ -62,9 +63,11 @@ def findSuppliers():
 			distances.setdefault(loc[0], calculateDistance(location, loc[0]))	
 		except IndexError as error:
 			app.logger.error(error)
-			app.logger.error('Failed to get distance for: ' + location)
+			app.logger.error('Failed to get distance for: ' + loc[0])
 			distances.setdefault(loc[0], -1)
 		
+	app.logger.debug(distances)
+	
 	groups_tmp = calculateGroups(disciplines, location, budget, visitors, skill, quality, price, distances)
 	
 	tmp = {}
@@ -109,12 +112,8 @@ def calculateGroups(disciplines, location, budget, visitors, skill, quality, pri
 	for supplier in all_suppliers:
 		dict_suppliers[supplier.discipline].append(supplier)
 	
-	prefHighQualityRating = pref[quality]
-	prefHighSkillRating = pref[skill]
-	prefHighPriceRating = pref[price]
-	
 	population = []
-	evaluator = Evaluator(25000, visitors, distances, prefHighQualityRating, prefHighSkillRating, prefHighPriceRating)
+	evaluator = Evaluator(1000, visitors, distances, pref[quality], pref[skill], pref[price])
 	
 	crossover = Crossover()
 	
@@ -138,19 +137,29 @@ def calculateGroups(disciplines, location, budget, visitors, skill, quality, pri
 	
 	flag = True
 	
-	while flag:
+	while flag:		
 		
-		
+		# Children
 		new_pop = []
 		
+		# Crossover the top 10 with 10 random others to make 10 children
 		for x in range(10):
 			ind1 = population[x]
 			ind2 = population[random.randint(0, len(population)-1)]
 			
 			new_ind = crossover.crossover(ind1, ind2)
+			
+			# Add to children
 			new_pop.append(new_ind)
 		
 		for ind in new_pop:
+		
+			# Mutate each supplier in each children with a 10% probability
+			for supplier in ind.suppliers:
+				if (random.random() < 0.2):
+					supplier = selectRandomSupplier(dict_suppliers, supplier.discipline)
+		
+			# Evaluate individual
 			score = evaluator.evaluation(ind)
 			
 			if score <> None:
@@ -159,24 +168,36 @@ def calculateGroups(disciplines, location, budget, visitors, skill, quality, pri
 				flag = False
 				break;
 				
+			# Add to population
 			population.append(ind)
 		
+		# Sort descending by score
 		population.sort(key=lambda x: x.score, reverse=True)
+		
+		# Keep top 100
 		population = population[:100]
 	
 	# Sort individuals by fitness
 	population.sort(key=lambda x: x.score, reverse=True)
 	
-	app.logger.debug(population[0].score)
-	app.logger.debug(population[1].score)
-	app.logger.debug(population[2].score)
-	app.logger.debug(population[3].score)
-	app.logger.debug(population[4].score)
+	
+	for x in range(10):
+		app.logger.debug(population[x].score)
+	
 		
 	return population[:3]
+
+
 	
+
 def calculateDistance(origin, destination):
+	
+	if origin == destination:
+		return 0
+
 	data = requests.get('https://maps.googleapis.com/maps/api/directions/json?origin=' + origin + '&destination=' + destination).json()
+	sleep(0.1)
+	
 	return data['routes'][0]['legs'][0]['distance']['value']
 
 def selectRandomSupplier(suppliers, sup_discipline):
