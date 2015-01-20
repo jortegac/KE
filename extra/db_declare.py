@@ -18,6 +18,7 @@ class Supplier(Base):
 	email = Column(String(250))
 	url = Column(String(250))
 	unit_measure = Column(Integer)
+	cost_unit_per_day = Column(Integer)
 	discipline = Column(String(250), nullable=False)
 	times_hired = Column(Integer)
 	location = Column(String(250))
