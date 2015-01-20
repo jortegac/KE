@@ -66,26 +66,32 @@ def findSuppliers():
 			app.logger.error('Failed to get distance for: ' + loc[0])
 			distances.setdefault(loc[0], -1)
 		
-	app.logger.debug(distances)
+	
 	
 	groups_tmp = calculateGroups(disciplines, location, budget, visitors, skill, quality, price, distances)
 	
 	tmp = {}
 	counter = 0
 	for group in groups_tmp:
+		app.logger.debug(group)
 		tmp.setdefault(counter, [])
 		for supplier in group.suppliers:
 			tmp[counter].append(supplier)
+		
 		counter += 1
+		
 	result = {}
 	for x in tmp:
 		result.setdefault(x, [])
+		result[x].append({'total_price' : groups_tmp[x].total_price})
 		for supplier in tmp[x]:
 			sup = {}
 			sup.setdefault('name', supplier.name)
 			sup.setdefault('contact', supplier.contact)
 			sup.setdefault('email', supplier.email)
 			sup.setdefault('url', supplier.url)
+			sup.setdefault('unit_measure', supplier.unit_measure)
+			sup.setdefault('cost_unit_per_day', supplier.cost_unit_per_day)
 			sup.setdefault('discipline', supplier.discipline)
 			sup.setdefault('times_hired', supplier.times_hired)
 			sup.setdefault('location', supplier.location)
@@ -124,8 +130,10 @@ def calculateGroups(disciplines, location, budget, visitors, skill, quality, pri
 			candidate_suppliers.append(selectRandomSupplier(dict_suppliers, sup_per_discipline))
 		individual = Individual(candidate_suppliers)
 		
+		individual.calculate_total(visitors)
+		
 		# get score for individual
-		score = evaluator.evaluation(individual)
+		score = evaluator.evaluation(individual, budget)
 		
 		# assign score
 		individual.score = score		
@@ -134,7 +142,8 @@ def calculateGroups(disciplines, location, budget, visitors, skill, quality, pri
 		population.append(individual)
 	
 	# Sort individuals by fitness
-	population.sort(key=lambda x: x.score, reverse=True)
+	population.sort(key=lambda x: (x.score), reverse=True)
+	
 	
 	# Evolve
 	flag = True	
@@ -161,8 +170,10 @@ def calculateGroups(disciplines, location, budget, visitors, skill, quality, pri
 				if (random.random() < 0.2):
 					supplier = selectRandomSupplier(dict_suppliers, supplier.discipline)
 		
+			ind.calculate_total(visitors)
+			
 			# Evaluate individual
-			score = evaluator.evaluation(ind)
+			score = evaluator.evaluation(ind, budget)
 			
 			if score <> None:
 				ind.score = score
@@ -174,7 +185,7 @@ def calculateGroups(disciplines, location, budget, visitors, skill, quality, pri
 			population.append(ind)
 		
 		# Sort descending by score
-		population.sort(key=lambda x: x.score, reverse=True)
+		population.sort(key=lambda x: (x.score, -x.total_price), reverse=True)
 		
 		# Keep top 100
 		population = population[:100]

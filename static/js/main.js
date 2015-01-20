@@ -128,11 +128,14 @@ function executeQuery(endpoint){
 			
 			
 			for( group in groups ){
-				var tmp = "<table class='my_table'><tr>";
 				suppliers = groups[group];
-				for( i=0; i < suppliers.length; i++){
+				var tmp = "";
+				tmp = tmp + "<p><h3>Total Cost: " + suppliers[0]['total_price']  + "</h3></p>";
+				tmp = tmp + "<table class='my_table'><tr>";
+				
+				for( i=1; i < suppliers.length; i++){
 					// Do something here with the data
-					if(i > 0 && i % 4 == 0) {
+					if((i-1) > 0 && (i-1) % 4 == 0) {
 						tmp = tmp + "</tr><tr>"
 					}
 					tmp = tmp + "<td><p><strong>" + suppliers[i].name + "</strong></br>";
@@ -176,6 +179,8 @@ function executeQuery(endpoint){
 				}		
 				
 				tmp = tmp + "</tr></table>"
+				
+				
 				
 				console.log(tmp);
 				
