@@ -1,10 +1,15 @@
 class Evaluator:
 
-	def evaluation(self, individual):
+	def evaluation(self, individual, budget):
 		score = 0
 		
 		for supplier in individual.suppliers:
 			score += self.function(supplier);
+			
+		if individual.total_price > budget:
+			score *= 0.6
+		else:
+			score *= 1.2
 		
 		self.counter += 1		
 		if self.counter == self.max_evals:
