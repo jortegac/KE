@@ -20,6 +20,6 @@ Run main.py to execute application
 
     python main.py
     
-Application should the be running on 
+Application should then be running on 
 
     http://localhost:5000
