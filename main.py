@@ -191,7 +191,7 @@ def calculateGroups(disciplines, location, budget, visitors, skill, quality, pri
 		population = population[:100]
 	
 	# Sort individuals by fitness
-	population.sort(key=lambda x: x.score, reverse=True)
+	population.sort(key=lambda x: (x.score, -x.total_price), reverse=True)
 	
 	for x in range(10):
 		app.logger.debug(population[x].score)

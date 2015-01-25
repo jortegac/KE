@@ -154,7 +154,7 @@ function executeQuery(endpoint){
 					}
 					
 					if(suppliers[i].times_hired != null){
-						tmp = tmp + "Times hired:" + suppliers[i].times_hired + "</br>";
+						tmp = tmp + "Times hired: " + suppliers[i].times_hired + "</br>";
 					}
 					
 					if(suppliers[i].location != null){
