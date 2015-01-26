@@ -10,10 +10,10 @@ Requires Flask, SQLAlchemy, requests and oauth2 packages
 
 #### Install the other dependencies
 
-    python main.pypip install flask
-    python main.pypip install SQLAlchemy
-    python main.pypip install requests
-    python main.pypip install oauth2
+    pip install flask
+    pip install SQLAlchemy
+    pip install requests
+    pip install oauth2
 
 ## Execution
 Run main.py to execute application
